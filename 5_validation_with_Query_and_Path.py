@@ -86,7 +86,7 @@ def update(
     item_id: Annotated[int , Path(ge=0)],
     name: Annotated[str | None , Query(min_length=1, max_length=8)]=None,
     price: Annotated[float | None , Query(gt=0.0)]=None,
-    count: Annotated[int | None , Query(ge=0)]=None,
+    count: int | None = Query(None,ge=0),
 ):
     if item_id not in items:
         HTTPException(status_code=404, detail=f"Item with {item_id=} does not exist.")
