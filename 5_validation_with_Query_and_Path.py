@@ -1,7 +1,7 @@
 from enum import Enum
 
 from pydantic import BaseModel
-
+from typing import Annotated
 from fastapi import FastAPI, HTTPException, Path, Query
 
 app = FastAPI()
@@ -47,7 +47,7 @@ Selection = dict[
 
 @app.get("/items/")
 def query_item_by_parameters(
-    name: str | None = None,
+    name: str | None = Query(),
     price: float | None = None,
     count: int | None = None,
     category: Category | None = None,
@@ -73,7 +73,7 @@ def query_item_by_parameters(
 @app.post("/")
 def add_item(item: Item) -> dict[str, Item]:
     if item.id in items:
-        HTTPException(status_code=400, detail=f"Item with {item.id=} already exists.")
+        raise HTTPException(status_code=400, detail=f"Item with {item.id=} already exists.")
 
     items[item.id] = item
     return {"added": item}
@@ -83,10 +83,10 @@ def add_item(item: Item) -> dict[str, Item]:
 # In this case we are setting a lower bound for valid values and a minimal and maximal length for the name.
 @app.put("/update/{item_id}")
 def update(
-    item_id: int = Path(ge=0),
-    name: str | None = Query(defaut=None, min_length=1, max_length=8),
-    price: float | None = Query(default=None, gt=0.0),
-    count: int | None = Query(default=None, ge=0),
+    item_id: Annotated[int , Path(ge=0)],
+    name: Annotated[str | None , Query(min_length=1, max_length=8)]=None,
+    price: Annotated[float | None , Query(gt=0.0)]=None,
+    count: Annotated[int | None , Query(ge=0)]=None,
 ):
     if item_id not in items:
         HTTPException(status_code=404, detail=f"Item with {item_id=} does not exist.")
