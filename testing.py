@@ -1,4 +1,4 @@
-from fastapi import HTTPException, status, Security, FastAPI,Header,Depends
+from fastapi import HTTPException, status, Security, FastAPI,Header,Depends,Query
 from fastapi.security import APIKeyHeader, APIKeyQuery
 from typing import Annotated
 # sign in to get api key and store the api key in the database with the username 
@@ -10,7 +10,10 @@ api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 
 
 def get_api_key(
-        a: str = Security(api_key_header)
+        t:Annotated[str|None,Query()],
+        a: str = Security(api_key_header),
+        # t:Annotated[str|None,Query()]=None
+             
 ) -> str:
     if a in api_keys:
         return a
@@ -30,9 +33,9 @@ def public():
 
 
 @app.get("/protecteeeeeeeeeeed")
-async def read_items(user_agent: Annotated[str | None, Header()] = None):
+async def read_items(user_agenttt: Annotated[str | None, Header()] = None):
     """A private endpoint that requires a valid API key to be provided."""
-    return {"User-Agent": user_agent}
+    return {"User-Agent": user_agenttt}
 
 @app.get("/protected")
 def private(api_key: str = Security(get_api_key)):
