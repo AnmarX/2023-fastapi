@@ -40,10 +40,8 @@ def private(api_key: str = Security(get_api_key)):
     return f"Private Endpoint. API Key: {api_key}"
 
 
-
-
 @app.get("/items/")
-async def read_items(user_agent: Annotated[str | None, Header()] = None):
-    return {"User-Agent": user_agent}
+async def read_items(u:str=Depends(api_key_header)):
+    return {"User-Agent": u}
 
 

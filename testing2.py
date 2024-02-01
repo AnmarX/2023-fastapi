@@ -3,11 +3,21 @@ import secrets
 from passlib.hash import bcrypt
 from passlib.context import CryptContext
 
-r=requests.get("http://localhost:8888/protected",headers={"x-api-key":"anmar"})
-print(r.status_code)
+# r=requests.get("http://localhost:8888/protected",headers={"x-api-key":"anmar"})
+# print(r.status_code)
 
+# print(r.json())
+# print(r.text)
+
+
+r=requests.get("http://localhost:8000/items",headers={"x-api-key":"anmar"})
+
+print(r)
 print(r.json())
-print(r.text)
+
+
+
+
 
 
 # pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
